@@ -13,5 +13,7 @@ type CurrencyService interface {
 type CurrencyRepository interface {
 	Find(out interface{}, conditions ...interface{}) error
 	CreateInBatches(value interface{}, batchSize int) error
+	GetAllCurrencies(out interface{}, start, end int64) error
+	GetCurrencyHistory(out interface{}, currency string, start, end int64) error
 	GetMinAndMaxDatesInHistory() (int64, int64)
 }

@@ -22,17 +22,13 @@ func (m *mockCurrencyService) GetHistory(currency, startDate, endDate string) ([
 }
 
 func TestGetCurrencies(t *testing.T) {
-	// Configurar el enrutador Gin
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
 
-	// Crear un manejador de moneda con un servicio de moneda ficticio
 	handler := newHandler(&mockCurrencyService{})
 
-	// Ruta de prueba
 	router.GET("/currencies/:currencyCode", handler.getCurrencies)
 
-	// Caso de prueba 1: Moneda válida
 	w := httptest.NewRecorder()
 	req1, _ := http.NewRequest("GET", "/currencies/USD", nil)
 	router.ServeHTTP(w, req1)

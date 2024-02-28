@@ -36,7 +36,6 @@ func NewService(repo port.CurrencyRepository) *service {
 // And the given date range.
 func (s *service) GetHistory(currency, startDate, endDate string) ([]*domain.CurrenciesHistory, error) {
 	var response []*domain.CurrenciesHistory
-	var filters []interface{}
 	var start, end int64
 
 	currency = strings.ToUpper(currency)
@@ -56,12 +55,10 @@ func (s *service) GetHistory(currency, startDate, endDate string) ([]*domain.Cur
 	}
 
 	if currency != allCurrenciesKey {
-		filters = []interface{}{"timestamp BETWEEN ? AND ? AND currency_code = ?", start, end, currency}
-	} else {
-		filters = []interface{}{"timestamp BETWEEN ? AND ?", start, end}
+		return response, s.repository.GetCurrencyHistory(&response, currency, start, end)
 	}
 
-	return response, s.repository.Find(&response, filters...)
+	return response, s.repository.GetAllCurrencies(&response, start, end)
 }
 
 func (s *service) GetCurrencies() {

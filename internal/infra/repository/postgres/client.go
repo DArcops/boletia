@@ -8,7 +8,8 @@ import (
 
 // ClientDB represents a postgres client
 type clientDB struct {
-	db *gorm.DB
+	db    *gorm.DB
+	write *gorm.DB
 }
 
 var (
@@ -47,4 +48,12 @@ func (c *clientDB) GetMinAndMaxDatesInHistory() (int64, int64) {
 	db.Table("currencies.currencies_history").Select("MAX(timestamp) as max_val").Scan(&maxVal)
 
 	return minVal, maxVal
+}
+
+func (c *clientDB) GetAllCurrencies(value interface{}, start, end int64) error {
+	return db.Find(value, "timestamp BETWEEN ? AND ?", start, end).Error
+}
+
+func (c *clientDB) GetCurrencyHistory(value interface{}, currency string, start, end int64) error {
+	return db.Find(value, "timestamp BETWEEN ? AND ? AND currency_code = ?", start, end, currency).Error
 }
